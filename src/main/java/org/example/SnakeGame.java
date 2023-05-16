@@ -54,7 +54,7 @@ public class SnakeGame extends JFrame {
         setUndecorated(true);
         setVisible(true);
 
-        buildFood(map,30);
+        buildFood(map,80);
         changeDirection();
 
         // Set up the timer to call moveSnake every second
@@ -63,6 +63,7 @@ public class SnakeGame extends JFrame {
     }
 
     public void drawSnakeCell(Graphics g, int x, int y, int width, int height, int type) {
+        int r = width / 2;
         g.setColor(Color.WHITE);
         g.fillRect(x, y, width, height);
         g.setColor(Color.GREEN);
@@ -94,6 +95,34 @@ public class SnakeGame extends JFrame {
                 height = 2 * height;
                 // 绘制圆的左下1/4部分
                 g.fillArc(x, y - height / 2, width, height, 180, 90);
+                break;
+            case 4:
+                // 绘制圆
+                g.fillOval(x, y, 2 * r, 2 * r);
+
+                // 绘制长方形
+                g.fillRect(x, y + r, 2 * r, r);
+                break;
+            case 5:
+                // 绘制圆
+                g.fillOval(x, y, 2 * r, 2 * r);
+
+                // 绘制长方形
+                g.fillRect(x, y, r, 2 * r);
+                break;
+            case 6:
+                // 绘制圆
+                g.fillOval(x, y, 2 * r, 2 * r);
+
+                // 绘制长方形
+                g.fillRect(x, y, 2 * r, r);
+                break;
+            case 7:
+                // 绘制圆
+                g.fillOval(x, y, 2 * r, 2 * r);
+
+                // 绘制长方形
+                g.fillRect(x + r, y, r, 2 * r);
                 break;
             default:
                 break;
@@ -159,6 +188,7 @@ public class SnakeGame extends JFrame {
                 }
             }
         }
+        drawSmallMap(bufferGraphics);
         g.drawImage(buffer, 0, 0, null);
     }
 
@@ -174,6 +204,13 @@ public class SnakeGame extends JFrame {
 
     public void findInflectionPointPositions(LinkedList<Position> positions) {
         int size = positions.size();
+        for(int i = 0;i < size;i++){
+            if(i == 0){
+                positions.get(0).setType(4 + direction);
+            }else{
+                positions.get(i).setType(-1);
+            }
+        }
         for (int i = 1; i < size - 1; i++) {
             Position curr = positions.get(i);
             Position prev = positions.get(i - 1);
@@ -316,21 +353,25 @@ public class SnakeGame extends JFrame {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyChar()) {
                     case 'w':
+                    case 'W':
                         if(direction != 2){
                             direction = 0;
                         }
                         break;
                     case 'd':
+                    case 'D':
                         if(direction != 3) {
                             direction = 1;
                         }
                         break;
                     case 's':
+                    case 'S':
                         if(direction != 0) {
                             direction = 2;
                         }
                         break;
                     case 'a':
+                    case 'A':
                         if(direction != 1) {
                             direction = 3;
                         }
@@ -341,6 +382,18 @@ public class SnakeGame extends JFrame {
                 }
             }
         });
+    }
+
+    public void drawSmallMap(Graphics g){
+        //设置画笔为黑色
+        g.setColor(Color.BLACK);
+        int x = 20;
+        int y = 20;
+        int scale = 1;
+        // 在x为20，y为20的位置画一个宽为100，高为100的矩形
+        g.drawRect(x, y, MAP_SIZE / scale, MAP_SIZE / scale);
+        // 在x为20 + subI / scale，y为20 + subJ / scale的位置画一个宽为subWidth / scale，高为subHeight / scale的矩形
+        g.drawRect(x + subI / scale, y + subJ / scale, subWidth / scale, subHeight / scale);
     }
 
 
